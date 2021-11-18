@@ -17,8 +17,8 @@ interface TodoItemsState {
     todoItems: TodoItem[];
 }
 
-interface TodoItemsAction {
-    type: 'loadState' | 'add' | 'delete' | 'toggleDone';
+export interface TodoItemsAction {
+    type: 'loadState' | 'add' | 'delete' | 'toggleDone' | 'drag';
     data: any;
 }
 
@@ -81,6 +81,11 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
                     { id: generateId(), done: false, ...action.data.todoItem },
                     ...state.todoItems,
                 ],
+            };
+        case 'drag':
+            return {
+                ...state,
+                todoItems: [...action.data],
             };
         case 'delete':
             return {

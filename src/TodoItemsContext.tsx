@@ -11,6 +11,7 @@ export interface TodoItem {
     title: string;
     details?: string;
     done: boolean;
+    time: string
 }
 
 interface TodoItemsState {
@@ -18,7 +19,7 @@ interface TodoItemsState {
 }
 
 export interface TodoItemsAction {
-    type: 'loadState' | 'add' | 'delete' | 'toggleDone' | 'drag';
+    type: 'loadState' | 'add' | 'delete' | 'toggleDone' | 'drag' | 'time';
     data: any;
 }
 
@@ -87,6 +88,14 @@ function todoItemsReducer(state: TodoItemsState, action: TodoItemsAction) {
                 ...state,
                 todoItems: [...action.data],
             };
+        case 'time':
+            return {
+                ...state,
+                todoItems: state.todoItems.map((el, idx) => {
+                    if(idx === action.data.id) return {...el, time: action.data.time}
+                    return el
+                })
+            }
         case 'delete':
             return {
                 ...state,

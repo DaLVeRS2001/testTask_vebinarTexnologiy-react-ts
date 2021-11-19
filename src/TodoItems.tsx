@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -72,17 +72,19 @@ export const TodoItemsList = function () {
         changeSpring({...staticSpring})
     }
 
+
     return (
         <DragDropContext onDragStart={()=> changeSpring({})} onDragEnd={handleOnDragEnd}>
+
             <Droppable droppableId={'todoItems'} type="PERSON">
                 {(provided) => (
                     <ul {...provided.droppableProps} ref={provided.innerRef} className={classes.root}>
                         {sortedItems.map((item, idx) => (
-                            <Draggable key={item.id} index={idx} draggableId={item.id}>
+                            <Draggable key={item.id+idx} index={idx} draggableId={item.id+idx}>
                                 {(provided)=> (
                                     <div  {...provided.draggableProps} {...provided.dragHandleProps} ref={provided.innerRef}>
                                         <motion.li   transition={spring} layout={true}>
-                                            <TodoItemCard item={item}/>
+                                            <TodoItemCard idx={idx} item={item}/>
                                         </motion.li>
                                     </div>
                                 )}
@@ -107,9 +109,9 @@ const useTodoItemCardStyles = makeStyles({
     },
 });
 
-export const TodoItemCard = function ({ item }: { item: TodoItem }) {
+export const TodoItemCard = function ({ item, idx }: { item: TodoItem, idx: number }) {
     const classes = useTodoItemCardStyles();
-    const { dispatch } = useTodoItems();
+    const { todoItems, dispatch } = useTodoItems();
 
     const handleDelete = useCallback(
         () => dispatch({ type: 'delete', data: { id: item.id } }),
@@ -125,6 +127,47 @@ export const TodoItemCard = function ({ item }: { item: TodoItem }) {
         [item.id, dispatch],
     );
 
+    const changeTime = (time: string, idx: number) => {
+        const permission = Notification.permission
+        switch (permission) {
+            case "granted":
+                dispatch({type: "time", data: {id: idx, time}})
+                break;
+            case "denied":
+                return false;
+            case "default":
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        dispatch({type: "time", data: {id: idx, time}})
+                    }
+                })
+        }
+    }
+
+
+
+
+
+
+    useEffect(()=> {
+        let interval: any;
+        if(item.time?.length) {
+            interval = setInterval(() => {
+                const options = {
+                    tag: 'tasks',
+                    body: `Пришло напоминание для задачи: ${item.title}`
+                }
+                const currentTime = new Date().toLocaleTimeString().replace(/(:\d{2}| [AP]M)$/, "")
+                if (currentTime >= item.time) {
+                    clearInterval(interval)
+                    new Notification('Напоминание', options)
+                }
+            }, 1000)
+        }
+        return ()=> clearInterval(interval)
+    }, [item])
+
+
     return (
         <Card
             className={classnames(classes.root, {
@@ -133,9 +176,13 @@ export const TodoItemCard = function ({ item }: { item: TodoItem }) {
         >
             <CardHeader
                 action={
-                    <IconButton aria-label="delete" onClick={handleDelete}>
-                        <DeleteIcon />
-                    </IconButton>
+                    <>
+                        <IconButton  aria-label="delete" onClick={handleDelete}>
+                            <DeleteIcon />
+                        </IconButton>
+                        <input value={item.time??''} onChange={(e)=>
+                            changeTime(e.currentTarget.value, idx)} type="time"/>
+                    </>
                 }
                 title={
                     <FormControlLabel

@@ -2,7 +2,6 @@
 import {generateId} from "../../services/SomeMethods";
 import {ITodoState, TodoActions, TodoActionTypes, TodoItem} from "../../types/reducers/todo";
 import produce from "immer";
-import {act} from "@testing-library/react";
 
 
 const initialState = {

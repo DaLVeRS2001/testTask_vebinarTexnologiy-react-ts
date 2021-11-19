@@ -7,6 +7,8 @@ import CertainData from "../services/getCertainData";
 import {addTodoItem} from "../redux/thunks/todoThunks";
 import {connect} from "react-redux";
 import {TodoItem} from "../types/reducers/todo";
+import {useEffect, useState} from "react";
+import {useTypedSelector} from "../hooks/useTypedSelector";
 
 
 export interface ITodoItemFormProps{
@@ -15,10 +17,33 @@ export interface ITodoItemFormProps{
 
  const TodoItemForm: React.FC<ITodoItemFormProps> = ({addTodoItem}) => {
 
-    const { control, handleSubmit, reset, watch } = useForm();
+    const [isCanBeAdded, handleIsCanBeAdded] = useState<boolean>(true)
+
+    const { control, handleSubmit, reset, watch, formState: {errors}, setError} = useForm();
 
     const inputStyles = new CertainData().getModel().getInputStyles(),
-        classes = inputStyles
+        classes = inputStyles;
+
+    const todoItems = useTypedSelector(state => state.todo.todoItems)
+
+     useEffect(()=> {
+         !isCanBeAdded && setError('addBtn', {
+             message: "Превышен лемит записей, удалите несколько штук"
+         })
+     }, [isCanBeAdded])
+
+
+     useEffect(() => {
+         if ('storage' in navigator && 'estimate' in navigator.storage) {
+             navigator.storage.estimate()
+                 .then(estimate => {
+                     if (estimate.usage && estimate.quota)
+                         estimate.usage >= estimate.quota
+                             ? handleIsCanBeAdded(false)
+                             : handleIsCanBeAdded(true)
+                 });
+         }
+     },[todoItems])
 
     return (
         <form
@@ -55,14 +80,17 @@ export interface ITodoItemFormProps{
                     />
                 )}
             />
-            <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                disabled={!watch('title')}
-            >
-                Add
-            </Button>
+            <>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                    disabled={!watch('title') || !isCanBeAdded}
+                >
+                    Add
+                </Button> <br/>
+                {errors.addBtn && <small style={{color: "red"}}>{errors.addBtn.message}</small>}
+            </>
         </form>
     );
 }

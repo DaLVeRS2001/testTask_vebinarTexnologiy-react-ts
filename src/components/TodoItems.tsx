@@ -1,30 +1,30 @@
-import { useEffect, useState } from "react";
+//Other
+import React, { useState } from "react";
+import CertainData from "../services/getCertainData";
+import { sortItems } from "../services/SomeMethods";
 import { motion } from "framer-motion";
 
+//Redux
+import { RootReducers } from "../redux/reducers";
+import { replaceTodoItems } from "../redux/thunks/todoThunks";
+import { connect } from "react-redux";
+
+//Types
+import { TodoItem } from "../types/reducers/todo";
+import { ITodoItemsListProps } from "../types/props";
+
+//Component
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
-import CertainData from "../services/getCertainData";
-import { connect } from "react-redux";
-import { changeField, replaceTodoItems } from "../redux/thunks/todoThunks";
-import { ChangeField, TodoItem } from "../types/reducers/todo";
-import { RootReducers } from "../redux/reducers";
 import TodoItemCard from "./TodoItemCard";
-import { sortItems } from "../services/SomeMethods";
-
-export interface ITodoItemsListProps {
-  todoItems: TodoItem[];
-  replaceTodoItems: (todoItems: TodoItem[]) => void;
-  changeField: (fieldData: ChangeField) => void;
-}
 
 const TodoItemsList: React.FC<ITodoItemsListProps> = ({
   todoItems,
   replaceTodoItems,
-  changeField,
 }) => {
   const [searchValue, changeSearchValue] = useState<string>("");
 
@@ -106,6 +106,4 @@ const mapStateToProps = (state: RootReducers): ITodoItemsListConnect => ({
   todoItems: state.todo.todoItems,
 });
 
-export default connect(mapStateToProps, { replaceTodoItems, changeField })(
-  TodoItemsList
-);
+export default connect(mapStateToProps, { replaceTodoItems })(TodoItemsList);

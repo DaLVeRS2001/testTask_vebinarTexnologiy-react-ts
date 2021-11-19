@@ -1,32 +1,32 @@
-import { ChangeField, TodoItem } from "../types/reducers/todo";
+//Other
+import React, { useState } from "react";
 import CertainData from "../services/getCertainData";
 import useTodoNotify from "../hooks/useTodoNotify";
-import Card from "@material-ui/core/Card";
-import classnames from "classnames";
-import CardHeader from "@material-ui/core/CardHeader";
-import IconButton from "@material-ui/core/IconButton";
-import DeleteIcon from "@material-ui/icons/Delete";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
+
+//Types
+import { ITodoItemCardProps } from "../types/props";
+
+//Redux
 import { connect } from "react-redux";
 import {
   changeField,
   deleteTodoItem,
   toggleDone,
 } from "../redux/thunks/todoThunks";
-import { useEffect, useState } from "react";
-import myLocalStorage from "../services/myLocalStorage";
-import Button from "@material-ui/core/Button";
 
-export interface ITodoItemCardProps {
-  item: TodoItem;
-  idx: number;
-  deleteTodoItem: (id: string) => void;
-  changeField: (fieldData: ChangeField) => void;
-  toggleDone: (id: string) => void;
-}
+//Styles
+import classnames from "classnames";
+
+//Material-ui
+import CardContent from "@material-ui/core/CardContent";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import CardHeader from "@material-ui/core/CardHeader";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import Card from "@material-ui/core/Card";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const TodoItemCard: React.FC<ITodoItemCardProps> = ({
   item,

@@ -1,6 +1,4 @@
 //ALIASES
-import { RootReducers } from "../../redux/reducers";
-
 export interface TodoItem {
   id: string;
   title: string;

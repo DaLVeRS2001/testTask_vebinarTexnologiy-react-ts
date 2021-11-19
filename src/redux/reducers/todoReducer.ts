@@ -3,7 +3,6 @@ import {
   ITodoState,
   TodoActions,
   TodoActionTypes,
-  TodoItem,
 } from "../../types/reducers/todo";
 import produce from "immer";
 

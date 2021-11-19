@@ -1,17 +1,20 @@
+//Other
+import React, { useEffect, useState } from "react";
+import CertainData from "../services/getCertainData";
+import { useTypedSelector } from "../hooks/useTypedSelector";
 import { useForm, Controller } from "react-hook-form";
+
+//Material-ui
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 
-import CertainData from "../services/getCertainData";
+//Redux
 import { addTodoItem } from "../redux/thunks/todoThunks";
 import { connect } from "react-redux";
-import { TodoItem } from "../types/reducers/todo";
-import { useEffect, useState } from "react";
-import { useTypedSelector } from "../hooks/useTypedSelector";
 
-export interface ITodoItemFormProps {
-  addTodoItem: (todoItem: TodoItem) => void;
-}
+//Types
+import { ITodoItemFormProps } from "../types/props";
+import { TodoItem } from "../types/reducers/todo";
 
 const TodoItemForm: React.FC<ITodoItemFormProps> = ({ addTodoItem }) => {
   const [isCanBeAdded, handleIsCanBeAdded] = useState<boolean>(true);

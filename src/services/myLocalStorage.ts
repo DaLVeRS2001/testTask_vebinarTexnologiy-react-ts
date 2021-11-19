@@ -1,4 +1,4 @@
-import { ITodoState } from "../types/reducers/todo";
+import { ILocalStorage } from "../types/services";
 
 const myLocalStorage: Readonly<ILocalStorage> = {
   keys: {
@@ -15,14 +15,5 @@ const myLocalStorage: Readonly<ILocalStorage> = {
     localStorage.removeItem(this.keys.root);
   },
 };
-
-export interface ILocalStorage {
-  readonly keys: {
-    root: "todoListState";
-  };
-  setCurrentState: (state: ITodoState) => void;
-  getCurrentState: () => string | null;
-  removeCurrentItems: () => void;
-}
 
 export default myLocalStorage;

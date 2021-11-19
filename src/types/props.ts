@@ -1,8 +1,7 @@
-import {ITodoState} from "./reducers/todo";
-
+import { ITodoState } from "./reducers/todo";
 
 //App
-export interface IAppProps{
-    loadState: (state: ITodoState | string)=> void
-    state: ITodoState
+export interface IAppProps {
+  loadState: (state: ITodoState | string) => void;
+  state: ITodoState;
 }

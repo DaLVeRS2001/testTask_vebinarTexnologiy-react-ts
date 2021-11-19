@@ -44,8 +44,9 @@ const TodoItemForm: React.FC<ITodoItemFormProps> = ({ addTodoItem }) => {
     if ("storage" in navigator && "estimate" in navigator.storage) {
       navigator.storage.estimate().then((estimate) => {
         if (estimate.usage && estimate.quota)
-          estimate.usage >= estimate.quota
-            ? handleIsCanBeAdded(false)
+          estimate.usage >= estimate.quota - 1000000
+            ? //Уменьшил для того, что бы не было в упор
+              handleIsCanBeAdded(false)
             : handleIsCanBeAdded(true);
       });
     }

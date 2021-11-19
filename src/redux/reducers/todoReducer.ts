@@ -18,6 +18,7 @@ export const todoReducer = (
     case TodoActionTypes.LOAD_STATE: {
       return action.payload;
     }
+
     case TodoActionTypes.ADD:
       return produce(state, (draft) => {
         draft.todoItems.push({
@@ -26,10 +27,12 @@ export const todoReducer = (
           done: false,
         });
       });
+
     case TodoActionTypes.REPLACE_TODO_ITEMS:
       return produce(state, (draft) => {
         draft.todoItems = action.payload;
       });
+
     case TodoActionTypes.FIELD:
       return produce(state, (draft) => {
         draft.todoItems = draft.todoItems.map((el, idx) => {
@@ -41,18 +44,19 @@ export const todoReducer = (
           return el;
         });
       });
+
     case TodoActionTypes.DELETE:
       return produce(state, (draft) => {
         draft.todoItems = draft.todoItems.filter(
           ({ id }) => id !== action.payload
         );
       });
+
     case TodoActionTypes.TOGGLE_DONE:
       const itemIndex = state.todoItems.findIndex(
         ({ id }) => id === action.payload
       );
       const item = { ...state.todoItems[itemIndex] };
-
       return produce(state, (draft) => {
         draft.todoItems = [
           ...state.todoItems.slice(0, itemIndex),

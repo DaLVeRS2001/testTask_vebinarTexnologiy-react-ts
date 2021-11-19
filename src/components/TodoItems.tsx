@@ -25,6 +25,7 @@ export interface ITodoItemsListProps{
 }
 
 const TodoItemsList: React.FC<ITodoItemsListProps> = ({todoItems, replaceTodoItems, changeField}) =>  {
+    const [searchValue, changeSearchValue] = useState<string>('')
 
     const {staticSpring, getTodoItemListStyles} = new CertainData().getModel(),
         todoItemListStyles = getTodoItemListStyles(),
@@ -34,12 +35,9 @@ const TodoItemsList: React.FC<ITodoItemsListProps> = ({todoItems, replaceTodoIte
     //Если не занулять объект, то при драг дропе дикая задержка
 
     const sortedItems = sortItems(todoItems),
-        [filteredItems, updateFilteredItems] = useState<TodoItem[]>([])
+        filteredItems = [...sortedItems].filter((item: TodoItem)=> item.tag?.startsWith(searchValue) || !item.tag)
 
 
-    useEffect(()=> {
-        updateFilteredItems([...sortedItems])
-    },[todoItems])
 
     const handleOnDragEnd = (result: DropResult ) => {
         if(!result.destination) return;
@@ -53,7 +51,10 @@ const TodoItemsList: React.FC<ITodoItemsListProps> = ({todoItems, replaceTodoIte
 
     return (
         <DragDropContext onDragStart={()=> changeSpring({})} onDragEnd={handleOnDragEnd}>
-
+            <input
+                placeholder={'Поиск по тегам'} type={'text'}
+                onChange={(e)=> changeSearchValue(e.target.value)}
+            />
             <Droppable droppableId={'todoItems'} type="PERSON">
                 {(provided) => (
                     <ul {...provided.droppableProps} ref={provided.innerRef} className={classes.root}>

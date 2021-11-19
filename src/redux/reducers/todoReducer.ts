@@ -1,8 +1,8 @@
 
 import {generateId} from "../../services/SomeMethods";
-import {ITodoState, TodoActions, TodoActionTypes} from "../../types/reducers/todo";
-
-
+import {ITodoState, TodoActions, TodoActionTypes, TodoItem} from "../../types/reducers/todo";
+import produce from "immer";
+import {act} from "@testing-library/react";
 
 
 const initialState = {
@@ -28,11 +28,13 @@ export const todoReducer = (state: ITodoState = initialState, action: TodoAction
                 todoItems: [...action.payload],
             };
         case TodoActionTypes.FIELD:
+            //produce тут не поможет
             return {
                 ...state,
-                todoItems: [
-                    {...state.todoItems[action.payload.id], [action.payload.fieldName]: action.payload.fieldVal}
-                ]
+                todoItems: state.todoItems.map((el, idx) => {
+                    if(idx === action.payload.id) return {...el, [action.payload.fieldName]: action.payload.fieldVal}
+                    return el
+                })
             }
         case TodoActionTypes.DELETE:
             return {

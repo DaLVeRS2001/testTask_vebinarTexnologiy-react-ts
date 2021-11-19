@@ -12,9 +12,13 @@ import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import {connect} from "react-redux";
 import {changeField, deleteTodoItem, toggleDone} from "../redux/thunks/todoThunks";
+import {useEffect, useState} from "react";
+import myLocalStorage from "../services/myLocalStorage";
+import Button from "@material-ui/core/Button";
 
-export interface ITodoItemCardProps{
-    item: TodoItem, idx: number
+export interface ITodoItemCardProps {
+    item: TodoItem,
+    idx: number
     deleteTodoItem: (id: string) => void
     changeField: (fieldData: ChangeField) => void
     toggleDone: (id: string) => void
@@ -23,14 +27,20 @@ export interface ITodoItemCardProps{
 const TodoItemCard: React.FC<ITodoItemCardProps> =
     ({item, idx, changeField, deleteTodoItem, toggleDone}) => {
 
+
+        const [itemTag, changeItemTag] = useState<string>(item.tag ?? '')
+        const handleOnChangeField = () => {
+            changeField({fieldName: 'tag', fieldVal: itemTag, id: idx})
+        }
+        //Эти вещи для оптимизации, тк если мы будем инетрировать целый массив из-за того что просто написали...
+        //букву, то все начинает лагать
+
         const todoItemCardStyles = new CertainData().getModel().getTodoItemCardStyles(),
             classes = todoItemCardStyles
 
         const fieldHandler = (fieldVal: string, idx: number): void => {
             changeField({fieldName: 'time', fieldVal, id: idx})
         }
-
-
         const {changeTime} = useTodoNotify(item, (value, idx) => fieldHandler(value, idx))
 
         return (
@@ -47,11 +57,20 @@ const TodoItemCard: React.FC<ITodoItemCardProps> =
                             </IconButton>
                             <input value={item.time ?? ''} onChange={(e) =>
                                 changeTime(e.currentTarget.value, idx)} type="time"/>
-                            <input
-                                style={{marginTop: '20px'}} value={item.tag ?? ''} type="text" placeholder={'Ваш тег'}
-                                onChange={(e) =>
-                                    changeField({fieldName: 'tag', fieldVal: e.target.value, id: idx})}
-                            />
+                            <>
+                                <input
+                                    style={{marginTop: '20px'}} value={itemTag} type="text" placeholder={'Ваш тег'}
+                                    onChange={(e) =>
+                                        changeItemTag(e.target.value)}
+                                />
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => itemTag !== item.tag && handleOnChangeField()}
+                                >
+                                    Save
+                                </Button>
+                            </>
                         </div>
                     }
                     title={
@@ -78,8 +97,6 @@ const TodoItemCard: React.FC<ITodoItemCardProps> =
             </Card>
         );
     };
-
-
 
 
 export default connect(null, {deleteTodoItem, toggleDone, changeField})(TodoItemCard)

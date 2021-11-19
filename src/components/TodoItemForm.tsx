@@ -1,24 +1,29 @@
-import { useTodoItems } from './TodoItemsContext';
+
 import { useForm, Controller } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
 
-const useInputStyles = makeStyles(() => ({
-    root: {
-        marginBottom: 24,
-    },
-}));
+import CertainData from "../services/getCertainData";
+import {addTodoItem} from "../redux/thunks/todoThunks";
+import {connect} from "react-redux";
+import {TodoItem} from "../types/reducers/todo";
 
-export default function TodoItemForm() {
-    const classes = useInputStyles();
-    const { dispatch } = useTodoItems();
+
+export interface ITodoItemFormProps{
+    addTodoItem: (todoItem: TodoItem) => void
+}
+
+ const TodoItemForm: React.FC<ITodoItemFormProps> = ({addTodoItem}) => {
+
     const { control, handleSubmit, reset, watch } = useForm();
+
+    const inputStyles = new CertainData().getModel().getInputStyles(),
+        classes = inputStyles
 
     return (
         <form
-            onSubmit={handleSubmit((formData) => {
-                dispatch({ type: 'add', data: { todoItem: formData } });
+            onSubmit={handleSubmit((formData: TodoItem) => {
+                addTodoItem(formData)
                 reset({ title: '', details: '' });
             })}
         >
@@ -61,3 +66,7 @@ export default function TodoItemForm() {
         </form>
     );
 }
+
+
+
+export default connect(null, {addTodoItem})(TodoItemForm)

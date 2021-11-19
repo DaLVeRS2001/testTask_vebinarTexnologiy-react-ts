@@ -1,47 +1,45 @@
-import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import { createMuiTheme } from '@material-ui/core/styles';
+import React, {useEffect} from 'react';
+
 import { ThemeProvider } from '@material-ui/styles';
-import { TodoItemsList } from './TodoItems';
-import { TodoItemsContextProvider } from './TodoItemsContext';
-import TodoItemForm from './TodoItemForm';
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: '#9012fe',
-        },
-        secondary: {
-            main: '#b2aabf',
-        },
-    },
-});
+import {connect, Provider} from "react-redux";
+import {store} from "./redux";
+import myLocalStorage from "./services/myLocalStorage";
+import {RootReducers} from "./redux/reducers";
+import {loadState} from "./redux/thunks/todoThunks";
+import {IAppConnect, ITodoState} from "./types/reducers/todo";
+import Content from "./components/Content";
+import {IAppProps} from "./types/props";
+import CertainData from "./services/getCertainData";
 
-function App() {
+
+
+
+const App: React.FC<IAppProps> = ({state, loadState}) => {
+
+    const theme = new CertainData().getModel().getTheme
+
+    useEffect(() => {
+        const savedState = myLocalStorage.getCurrentState()
+        savedState && loadState(savedState)
+    }, []);
+
+    useEffect(() => {
+        myLocalStorage.setCurrentState(state)
+    }, [state.todoItems]);
+
     return (
-        <TodoItemsContextProvider>
             <ThemeProvider theme={theme}>
                 <Content />
             </ThemeProvider>
-        </TodoItemsContextProvider>
     );
 }
 
-function Content() {
-    return (
-        <Container maxWidth="sm">
-            <header>
-                <Typography variant="h2" component="h1">
-                    Todo List
-                </Typography>
-            </header>
-            <main>
-                <TodoItemForm />
-                <TodoItemsList />
-            </main>
-        </Container>
-    );
-}
 
-export default App;
+
+
+const mapStateToProps = (state: RootReducers): IAppConnect => ({
+    state: state.todo
+})
+
+export default connect(mapStateToProps, {loadState})(App);

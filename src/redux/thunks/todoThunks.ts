@@ -9,7 +9,6 @@ export const addTodoItem: TDefaultAC = (todoItem: TodoItem) => (dispatch: Dispat
         dispatch({type: TodoActionTypes.DELETE, payload: id})
     },
     replaceTodoItems: TDefaultAC = (todoItems: TodoItem[]) => (dispatch: Dispatch<TodoActions>) => {
-        console.log(todoItems)
         dispatch({type: TodoActionTypes.REPLACE_TODO_ITEMS, payload: todoItems})
     },
     changeField: TDefaultAC = (fieldData: ChangeField) => (dispatch: Dispatch<TodoActions>) => {

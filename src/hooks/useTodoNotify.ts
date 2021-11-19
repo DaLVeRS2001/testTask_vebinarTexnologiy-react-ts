@@ -24,7 +24,10 @@ const useTodoNotify = (item: TodoItem, handler: (fieldVal: string, idx: number)=
     //если проигнорил, то снова спросим до тех пор, пока не согласится или не заблочит
     //если согласен, то устанавливаем время
 
-    //notify проверят каждую минуту, если время совпало или элемент удалили, то уберам интервал
+    //notify проверят каждый 10 сек(тоесть когда время пришло, через 10 секунд выведит), если время совпало или элемент
+    // удалили, то уберам интервал
+
+    //если перезагрузить стр, то пять вылезит, до тех пор, пока не удалим или не сменим время
     useEffect(()=> {
         let interval:  NodeJS.Timeout;
         if(item.time?.length) {
@@ -38,7 +41,7 @@ const useTodoNotify = (item: TodoItem, handler: (fieldVal: string, idx: number)=
                     clearInterval(interval)
                     new Notification('Напоминание', options)
                 }
-            }, 1000*60)
+            }, 1000*10)
         }
         return ()=> clearInterval(interval)
     }, [item])

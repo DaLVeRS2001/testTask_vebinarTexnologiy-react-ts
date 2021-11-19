@@ -41,6 +41,7 @@ const TodoItemCard: React.FC<ITodoItemCardProps> =
         const fieldHandler = (fieldVal: string, idx: number): void => {
             changeField({fieldName: 'time', fieldVal, id: idx})
         }
+
         const {changeTime} = useTodoNotify(item, (value, idx) => fieldHandler(value, idx))
 
         return (
@@ -66,7 +67,7 @@ const TodoItemCard: React.FC<ITodoItemCardProps> =
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => itemTag !== item.tag && handleOnChangeField()}
+                                    onClick={() => handleOnChangeField()}
                                 >
                                     Save
                                 </Button>

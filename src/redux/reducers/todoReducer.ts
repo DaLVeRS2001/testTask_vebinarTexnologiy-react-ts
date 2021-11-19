@@ -15,48 +15,35 @@ export const todoReducer = (state: ITodoState = initialState, action: TodoAction
             return action.payload;
         }
         case TodoActionTypes.ADD:
-            return {
-                ...state,
-                todoItems: [
-                    {...action.payload, id: generateId(), done: false},
-                    ...state.todoItems,
-                ]
-            };
+            return produce(state, draft => {
+                draft.todoItems.push( {...action.payload, id: generateId(), done: false})
+            })
         case TodoActionTypes.REPLACE_TODO_ITEMS:
-            return {
-                ...state,
-                todoItems: [...action.payload],
-            };
+            return produce(state, draft => {
+                draft.todoItems = action.payload
+            })
         case TodoActionTypes.FIELD:
-            //produce тут не поможет
-            return {
-                ...state,
-                todoItems: state.todoItems.map((el, idx) => {
-                    if(idx === action.payload.id) return {...el, [action.payload.fieldName]: action.payload.fieldVal}
+            return produce(state, draft => {
+                draft.todoItems =  draft.todoItems.map((el, idx) => {
+                    if (idx === action.payload.id) return {...el, [action.payload.fieldName]: action.payload.fieldVal}
                     return el
                 })
-            }
+            })
         case TodoActionTypes.DELETE:
-            return {
-                ...state,
-                todoItems: state.todoItems.filter(
-                    ({ id }) => id !== action.payload,
-                ),
-            };
+            return produce(state, draft => {
+               draft.todoItems = draft.todoItems.filter(({id})=> id !== action.payload)
+            })
         case TodoActionTypes.TOGGLE_DONE:
-            const itemIndex = state.todoItems.findIndex(
-                ({ id }) => id === action.payload,
-            );
-            const item = state.todoItems[itemIndex];
+            const itemIndex = state.todoItems.findIndex(({ id }) => id === action.payload);
+            const item = {...state.todoItems[itemIndex]}
 
-            return {
-                ...state,
-                todoItems: [
+            return produce(state, draft => {
+               draft.todoItems = [
                     ...state.todoItems.slice(0, itemIndex),
                     { ...item, done: !item.done },
                     ...state.todoItems.slice(itemIndex + 1),
-                ],
-            };
+                ]
+            })
         default:
            return state
     }

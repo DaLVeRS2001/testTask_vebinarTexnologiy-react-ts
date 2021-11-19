@@ -38,7 +38,6 @@ const TodoItemsList: React.FC<ITodoItemsListProps> = ({todoItems, replaceTodoIte
         filteredItems = [...sortedItems].filter((item: TodoItem)=> item.tag?.startsWith(searchValue) || !item.tag)
 
 
-
     const handleOnDragEnd = (result: DropResult ) => {
         if(!result.destination) return;
         const items = [...todoItems]
@@ -54,6 +53,7 @@ const TodoItemsList: React.FC<ITodoItemsListProps> = ({todoItems, replaceTodoIte
             <input
                 placeholder={'Поиск по тегам'} type={'text'}
                 onChange={(e)=> changeSearchValue(e.target.value)}
+                style={{marginTop: "20px"}}
             />
             <Droppable droppableId={'todoItems'} type="PERSON">
                 {(provided) => (

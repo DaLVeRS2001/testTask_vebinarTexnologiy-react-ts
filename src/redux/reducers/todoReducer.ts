@@ -36,7 +36,10 @@ export const todoReducer = (
     case TodoActionTypes.FIELD:
       return produce(state, (draft) => {
         draft.todoItems = draft.todoItems.map((el, idx) => {
-          if (idx === action.payload.id)
+          if (
+            (idx === action.payload.idx && !action.payload.id) ||
+            action.payload.id === el.id
+          )
             return {
               ...el,
               [action.payload.fieldName]: action.payload.fieldVal,

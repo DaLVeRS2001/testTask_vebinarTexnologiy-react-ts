@@ -39,7 +39,8 @@ const TodoItemsList: React.FC<ITodoItemsListProps> = ({
 
   const sortedItems = sortItems(todoItems),
     filteredItems = [...sortedItems].filter(
-      (item: TodoItem) => item.tag?.startsWith(searchValue) || !item.tag
+      (item: TodoItem) =>
+        item.tag?.startsWith(searchValue) || (!item.tag && !searchValue.length)
     );
 
   const handleOnDragEnd = (result: DropResult) => {

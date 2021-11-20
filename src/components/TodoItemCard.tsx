@@ -37,7 +37,7 @@ const TodoItemCard: React.FC<ITodoItemCardProps> = ({
 }) => {
   const [itemTag, changeItemTag] = useState<string>(item.tag ?? "");
   const handleOnChangeField = () => {
-    changeField({ fieldName: "tag", fieldVal: itemTag, id: idx });
+    changeField({ fieldName: "tag", fieldVal: itemTag, idx: idx });
   };
   //Эти вещи для оптимизации, тк если мы будем инетрировать целый массив из-за того что просто написали...
   //букву, то все начинает лагать
@@ -48,7 +48,7 @@ const TodoItemCard: React.FC<ITodoItemCardProps> = ({
     classes = todoItemCardStyles;
 
   const fieldHandler = (fieldVal: string, idx: number): void => {
-    changeField({ fieldName: "time", fieldVal, id: idx });
+    changeField({ fieldName: "time", fieldVal, idx: idx, id: item.id });
   };
 
   const { changeTime } = useTodoNotify(item, (value, idx) =>

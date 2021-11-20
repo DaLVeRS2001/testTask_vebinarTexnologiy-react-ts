@@ -8,7 +8,8 @@ export interface TodoItem {
   tag: string;
 }
 export type ChangeField = {
-  id: number;
+  idx: number;
+  id?: string;
   fieldName: keyof TodoItem;
   fieldVal: any;
 };

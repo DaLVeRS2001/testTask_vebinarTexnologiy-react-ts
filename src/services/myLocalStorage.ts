@@ -11,6 +11,10 @@ const myLocalStorage: Readonly<ILocalStorage> = {
     const state = localStorage.getItem(this.keys.root);
     return JSON.parse(<string>state);
   },
+  getTodoItems() {
+    const state = localStorage.getItem(this.keys.root);
+    return JSON.parse(<string>state)?.todoItems;
+  },
   removeCurrentItems() {
     localStorage.removeItem(this.keys.root);
   },

@@ -26,5 +26,6 @@ export interface ILocalStorage {
   };
   setCurrentState: (state: ITodoState) => void;
   getCurrentState: () => string | null;
+  getTodoItems: () => string | null;
   removeCurrentItems: () => void;
 }

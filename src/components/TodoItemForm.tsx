@@ -36,7 +36,7 @@ const TodoItemForm: React.FC<ITodoItemFormProps> = ({ addTodoItem }) => {
   useEffect(() => {
     !isCanBeAdded &&
       setError("addBtn", {
-        message: "Превышен лемит записей, удалите несколько штук",
+        message: "Превышен лимит записей, удалите несколько штук",
       });
   }, [isCanBeAdded]);
 

@@ -45,7 +45,7 @@ const TodoItemsList: React.FC<ITodoItemsListProps> = ({
 
   const handleOnDragEnd = (result: DropResult) => {
     if (!result.destination) return;
-    const items = [...todoItems];
+    const items = [...sortedItems];
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     replaceTodoItems(items);

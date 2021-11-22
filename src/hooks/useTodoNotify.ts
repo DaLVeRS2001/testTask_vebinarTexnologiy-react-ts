@@ -32,7 +32,8 @@ const useTodoNotify: TypedUseTodoNotify = (item, handler) => {
       tag: "tasks",
       body: `Пришло напоминание для задачи: ${item.title}`,
     };
-    if (item.time?.length) {
+
+    if (item.time?.length && !item.done) {
       interval = setInterval(() => {
         const currentTime = new Date()
           .toLocaleTimeString()

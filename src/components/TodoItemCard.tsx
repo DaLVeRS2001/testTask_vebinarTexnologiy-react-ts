@@ -36,7 +36,7 @@ const TodoItemCard: React.FC<ITodoItemCardProps> = ({
   toggleDone,
 }) => {
   const [itemTag, changeItemTag] = useState<string>(item.tag ?? "");
-  const handleOnChangeField = () => {
+  const handleOnChangeField = (): void => {
     changeField({ fieldName: "tag", fieldVal: itemTag, idx: idx });
   };
   //Эти вещи для оптимизации, тк если мы будем инетрировать целый массив из-за того что просто написали...
@@ -51,7 +51,7 @@ const TodoItemCard: React.FC<ITodoItemCardProps> = ({
     changeField({ fieldName: "time", fieldVal, idx: idx, id: item.id });
   };
 
-  const { changeTime } = useTodoNotify(item, (value, idx) =>
+  const { setNotifyType } = useTodoNotify(item, (value, idx) =>
     fieldHandler(value, idx)
   );
 
@@ -72,7 +72,7 @@ const TodoItemCard: React.FC<ITodoItemCardProps> = ({
             </IconButton>
             <input
               value={item.time ?? ""}
-              onChange={(e) => changeTime(e.currentTarget.value, idx)}
+              onChange={(e) => setNotifyType(e.currentTarget.value, idx)}
               type="time"
             />
             <>

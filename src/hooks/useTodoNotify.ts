@@ -5,7 +5,7 @@ const useTodoNotify = (
   item: TodoItem,
   handler: (fieldVal: string, idx: number) => void
 ) => {
-  const changeTime = (value: string, idx: number) => {
+  const setNotifyType = (value: string, idx: number) => {
     const permission = Notification.permission;
     switch (permission) {
       case "granted":
@@ -25,18 +25,18 @@ const useTodoNotify = (
   //если проигнорил, то снова спросим до тех пор, пока не согласится или не заблочит
   //если согласен, то устанавливаем время
 
-  //notify проверят каждый 30 сек(тоесть когда время пришло, через 30 секунд выведит), если время совпало или элемент
+  //notify проверят каждый 20 сек(тоесть когда время пришло, через 20 секунд выведит), если время совпало или элемент
   // удалили, то уберам интервал
 
   //если перезагрузить стр, то опять вылезит, до тех пор, пока не удалим или не сменим время
   useEffect(() => {
     let interval: NodeJS.Timeout;
+    const options = {
+      tag: "tasks",
+      body: `Пришло напоминание для задачи: ${item.title}`,
+    };
     if (item.time?.length) {
       interval = setInterval(() => {
-        const options = {
-          tag: "tasks",
-          body: `Пришло напоминание для задачи: ${item.title}`,
-        };
         const currentTime = new Date()
           .toLocaleTimeString()
           .replace(/(:\d{2}| [AP]M)$/, "");
@@ -44,12 +44,12 @@ const useTodoNotify = (
           clearInterval(interval);
           new Notification("Напоминание", options);
         }
-      }, 1000 * 10);
+      }, 1000 * 20);
     }
     return () => clearInterval(interval);
   }, [item]);
 
-  return { changeTime };
+  return { setNotifyType };
 };
 
 export default useTodoNotify;

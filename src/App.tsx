@@ -4,7 +4,6 @@ import CertainData from "./services/getCertainData";
 import useTabsSyncing from "./hooks/useTabsSyncing";
 
 //Material-ui
-import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 
 //Redux
@@ -20,8 +19,7 @@ import { IAppConnect } from "./types/reducers/todo";
 import Content from "./components/Content";
 
 const App: React.FC<IAppProps> = ({ state, loadState }) => {
-  const theme: ReturnType<typeof createMuiTheme> = new CertainData().getModel()
-    .getTheme;
+  const theme = new CertainData().getModel().getTheme;
   useTabsSyncing(loadState, state);
 
   return (

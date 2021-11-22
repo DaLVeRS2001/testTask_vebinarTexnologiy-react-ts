@@ -1,10 +1,7 @@
 import { useEffect } from "react";
-import { TodoItem } from "../types/reducers/todo";
+import { TypedUseTodoNotify } from "../types/hooks";
 
-const useTodoNotify = (
-  item: TodoItem,
-  handler: (fieldVal: string, idx: number) => void
-) => {
+const useTodoNotify: TypedUseTodoNotify = (item, handler) => {
   const setNotifyType = (value: string, idx: number) => {
     const permission = Notification.permission;
     switch (permission) {

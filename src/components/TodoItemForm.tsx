@@ -1,5 +1,5 @@
 //Other
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CertainData from "../services/getCertainData";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { useForm, Controller } from "react-hook-form";
@@ -15,42 +15,19 @@ import { connect } from "react-redux";
 //Types
 import { ITodoItemFormProps } from "../types/props";
 import { TodoItem } from "../types/reducers/todo";
+import useStorageLimit from "../hooks/useStorageLimit";
 
 const TodoItemForm: React.FC<ITodoItemFormProps> = ({ addTodoItem }) => {
-  const [isCanBeAdded, handleIsCanBeAdded] = useState<boolean>(true);
-
-  const {
-    control,
-    handleSubmit,
-    reset,
-    watch,
-    formState: { errors },
-    setError,
-  } = useForm();
+  const { control, handleSubmit, reset, watch } = useForm();
 
   const inputStyles = new CertainData().getModel().getInputStyles(),
     classes = inputStyles;
 
-  const todoItems = useTypedSelector((state) => state.todo.todoItems);
+  const todoItems = useTypedSelector<TodoItem[]>(
+    (state) => state.todo.todoItems
+  );
 
-  useEffect(() => {
-    !isCanBeAdded &&
-      setError("addBtn", {
-        message: "Превышен лимит записей, удалите несколько штук",
-      });
-  }, [isCanBeAdded]);
-
-  useEffect(() => {
-    if ("storage" in navigator && "estimate" in navigator.storage) {
-      navigator.storage.estimate().then((estimate) => {
-        //Уменьшил для того, что бы не было в упор
-        if (estimate.usage && estimate.quota)
-          estimate.usage >= estimate.quota - 1000000
-            ? handleIsCanBeAdded(false)
-            : handleIsCanBeAdded(true);
-      });
-    }
-  }, [todoItems]);
+  const { isCanBeAdded, storageLimitError } = useStorageLimit(todoItems);
 
   return (
     <form
@@ -97,8 +74,8 @@ const TodoItemForm: React.FC<ITodoItemFormProps> = ({ addTodoItem }) => {
           Add
         </Button>{" "}
         <br />
-        {errors.addBtn && (
-          <small style={{ color: "red" }}>{errors.addBtn.message}</small>
+        {storageLimitError && (
+          <small style={{ color: "red" }}>{storageLimitError}</small>
         )}
       </>
     </form>

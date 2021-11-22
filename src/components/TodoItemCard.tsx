@@ -39,7 +39,7 @@ const TodoItemCard: React.FC<ITodoItemCardProps> = ({
   const handleOnChangeField = (): void => {
     changeField({ fieldName: "tag", fieldVal: itemTag, idx: idx });
   };
-  //Эти вещи для оптимизации, тк если мы будем инетрировать целый массив из-за того что просто написали...
+  //Эти вещи для оптимизации, тк если мы будем инетрировать целый массив из-за того что просто написали
   //букву, то все начинает лагать
 
   const todoItemCardStyles = new CertainData()

@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import myLocalStorage from "../services/myLocalStorage";
 import _ from "lodash";
-import { ITodoState } from "../types/reducers/todo";
+import { TypedUseTabsSyncing } from "../types/hooks";
 
-const useTabsSyncing = (
-  loadState: (state: string) => void,
-  state: ITodoState
-) => {
+const useTabsSyncing: TypedUseTabsSyncing = (loadState, state) => {
   const [render, setRender] = useState<number>(0);
 
   const savedTodoItems: string | null = myLocalStorage.getTodoItems();
@@ -19,6 +16,7 @@ const useTabsSyncing = (
 
   useEffect(() => {
     toSaveState();
+    //eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -31,10 +29,12 @@ const useTabsSyncing = (
     window.addEventListener("storage", listener);
     render > 0 && window.removeEventListener("storage", listener);
     //возникает цикличность, это её исправляет, как и условие theSameStates
+    //eslint-disable-next-line
   }, [render]);
 
   useEffect(() => {
     !theSameStates && myLocalStorage.setCurrentState(state);
+    //eslint-disable-next-line
   }, [state.todoItems]);
 };
 
